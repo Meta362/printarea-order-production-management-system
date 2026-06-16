@@ -1,0 +1,814 @@
+This file is a merged representation of the entire codebase, combined into a single document by Repomix.
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of the entire repository's contents.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Multiple file entries, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+</file_summary>
+
+<directory_structure>
+app.js
+firebase-config.js
+index.html
+services/customerService.js
+services/designService.js
+services/orderService.js
+services/quotationService.js
+ui/customerUI.js
+ui/designUI.js
+ui/orderUI.js
+ui/quotationUI.js
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path="app.js">
+import { db } from './firebase-config.js';
+import { renderCustomerModule } from './ui/customerUI.js';
+import { renderOrderModule } from './ui/orderUI.js';
+import { renderDesignModule } from './ui/designUI.js';
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    console.log("System Status: Architecture Booted.");
+    console.log("Database Link:", db ? "Active" : "Failed");
+
+    const mainContent = document.getElementById('main-content');
+    const headerTitle = document.getElementById('headerTitle');
+    const navLinks = document.querySelectorAll('#sidebarNav a');
+
+    // ប្រព័ន្ធ Routing ដ៏សាមញ្ញ ប៉ុន្តែរឹងមាំ
+    navLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            
+            // ដក Active state ពីចាស់
+            navLinks.forEach(l => l.classList.remove('bg-gray-800'));
+            // ដាក់ Active state ទៅថ្មី
+            e.target.classList.add('bg-gray-800');
+
+            const targetModule = e.target.getAttribute('data-target');
+            
+            // Logic ហៅ Module មកបង្ហាញ (អ្នកនឹងបង្រៀន AI ឱ្យសរសេរកន្លែងនេះ)
+            loadModule(targetModule, mainContent, headerTitle);
+        });
+    });
+});
+
+function loadModule(moduleName, container, header) {
+    container.innerHTML = '<div class="p-4 flex justify-center"><div class="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div></div>';
+    
+    setTimeout(() => {
+        switch(moduleName) {
+            case 'dashboard':
+                header.innerText = "Dashboard ទូទៅ";
+                container.innerHTML = `<div class="p-4 bg-green-100 text-green-800 rounded font-bold border border-green-300">ទិដ្ឋភាព Dashboard នឹងបង្ហាញនៅទីនេះ</div>`;
+                break;
+            case 'customer':
+                header.innerText = "គ្រប់គ្រងអតិថិជន (CRM)";
+                renderCustomerModule(container);
+                break;
+            case 'order':
+                header.innerText = "គ្រប់គ្រងការបញ្ជាទិញ (Orders)";
+                // ២. ហៅ Function គូរ UI សម្រាប់ Order នៅទីនេះ
+                renderOrderModule(container);
+                break;
+            case 'design':
+                console.log("បានរត់ចូល case 'design' ហើយ!"); // +++ ដាក់បន្ទាត់នេះ
+                header.innerText = "គ្រប់គ្រងការរចនា (Design & Files)";
+                
+                try {
+                    renderDesignModule(container); 
+                    console.log("គូរ UI រួចរាល់!"); // +++ ដាក់បន្ទាត់នេះ
+                } catch (error) {
+                    console.error("មានបញ្ហានៅពេលហៅ renderDesignModule:", error); // +++ ដាក់បន្ទាត់នេះដើម្បីចាប់ Error ដែលអាចលាក់ខ្លួន
+                }
+                break;
+        }
+    }, 150);
+}
+</file>
+
+<file path="firebase-config.js">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+import { getFirestore } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+import { getStorage } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-storage.js";
+
+// លក្ខខណ្ឌតឹងរ៉ឹង៖ ផ្លាស់ប្តូរ Config នេះទៅជារបស់អ្នកនៅពេលក្រោយ
+const firebaseConfig = {
+    apiKey: "MOCK_API_KEY_FOR_INITIALIZATION",
+    authDomain: "popms-app.firebaseapp.com",
+    projectId: "popms-app",
+    storageBucket: "popms-app.appspot.com",
+    messagingSenderId: "1234567890",
+    appId: "1:1234567890:web:mock123"
+};
+
+export const app = initializeApp(firebaseConfig);
+export const db = getFirestore(app);
+export const storage = getStorage(app);
+</file>
+
+<file path="index.html">
+<!DOCTYPE html>
+<html lang="km">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POPMS - Management System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex h-screen overflow-hidden">
+
+    <aside class="w-64 bg-gray-900 text-white flex flex-col">
+        <div class="p-4 text-2xl font-bold border-b border-gray-800">POPMS Admin</div>
+        <nav class="flex-1 p-4 space-y-2" id="sidebarNav">
+            <a href="#" data-target="dashboard" class="block px-4 py-2 bg-gray-800 rounded hover:bg-gray-700 transition">Dashboard</a>
+            <a href="#" data-target="customer" class="block px-4 py-2 rounded hover:bg-gray-700 transition">Customer CRM</a>
+            <a href="#" data-target="order" class="block px-4 py-2 rounded hover:bg-gray-700 transition">Order Management</a>
+            <a href="#" data-target="design" class="block px-4 py-2 rounded hover:bg-gray-700 transition">Design & Files</a>
+        </nav>
+    </aside>
+
+    <main class="flex-1 flex flex-col">
+        <header class="bg-white shadow p-4 flex justify-between items-center">
+            <h1 class="text-xl font-bold text-gray-800" id="headerTitle">Dashboard</h1>
+            <div class="text-sm text-gray-500">អ្នកប្រើប្រាស់: Owner</div>
+        </header>
+        
+        <div id="main-content" class="p-6 flex-1 overflow-y-auto">
+            <div class="bg-white p-6 rounded-lg shadow border-l-4 border-blue-500">
+                <h2 class="text-xl font-bold">សូមស្វាគមន៍មកកាន់ POPMS</h2>
+                <p class="text-gray-600 mt-2">ប្រព័ន្ធគ្រឹះត្រូវបានដំឡើងជោគជ័យ។ សូមចាប់ផ្តើមសរសេរ Modules។</p>
+            </div>
+        </div>
+    </main>
+
+    <script type="module" src="./app.js"></script>
+</body>
+</html>
+</file>
+
+<file path="services/customerService.js">
+import { db } from '../firebase-config.js';
+import { collection, addDoc, getDocs, serverTimestamp, orderBy, query } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+// មុខងារបញ្ចូលអតិថិជនថ្មី
+export async function createCustomer(customerData) {
+    try {
+        const docRef = await addDoc(collection(db, "customers"), {
+            ...customerData,
+            createdAt: serverTimestamp()
+        });
+        return docRef.id;
+    } catch (error) {
+        console.error("Database Write Error: ", error);
+        throw error;
+    }
+}
+
+// មុខងារទាញយកអតិថិជនទាំងអស់ (មានតម្រៀបតាមពេលវេលា)
+export async function getAllCustomers() {
+    try {
+        const q = query(collection(db, "customers"), orderBy("createdAt", "desc"));
+        const querySnapshot = await getDocs(q);
+        const customers = [];
+        querySnapshot.forEach((doc) => {
+            customers.push({ id: doc.id, ...doc.data() });
+        });
+        return customers;
+    } catch (error) {
+        console.error("Database Read Error: ", error);
+        throw error;
+    }
+}
+</file>
+
+<file path="services/designService.js">
+import { db } from '../firebase-config.js';
+import { collection, addDoc, doc, updateDoc, runTransaction, serverTimestamp, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+// ១. បង្កើតគម្រោងរចនាថ្មី (Design Job) ដោយភ្ជាប់តែជាមួយអតិថិជន មិនទាន់មាន Order
+export async function createDesignJob(customerId, requirements) {
+    try {
+        const docRef = await addDoc(collection(db, "designs"), {
+            customerId: customerId,
+            requirements: requirements, // ឧ. "ចង់បានកាតពណ៌ខ្មៅ រចនាបថ Minimalist"
+            status: "Drafting", // Drafting, Reviewing, Approved
+            previewFiles: [],
+            finalPrintFiles: [],
+            linkedOrderId: null, // នៅទទេរហូតដល់ភ្ញៀវបញ្ជាក់ចំនួន
+            createdAt: serverTimestamp()
+        });
+        return docRef.id;
+    } catch (error) {
+        console.error("បរាជ័យក្នុងការបង្កើត Design Job: ", error);
+        throw new Error("មិនអាចបង្កើតកំណត់ត្រារចនាបានទេ");
+    }
+}
+
+// ២. អាប់ដេតឯកសារ និងស្ថានភាពនៅពេល Designer ធ្វើការ
+export async function updateDesignFiles(designId, fileUrls, type = 'preview') {
+    const designRef = doc(db, "designs", designId);
+    try {
+        const updateData = type === 'preview' 
+            ? { previewFiles: fileUrls, status: "Reviewing" }
+            : { finalPrintFiles: fileUrls };
+            
+        await updateDoc(designRef, updateData);
+        return true;
+    } catch (error) {
+        console.error("Update Design Error: ", error);
+        throw error;
+    }
+}
+
+// ៣. បំប្លែង Design ដែលភ្ញៀវពេញចិត្ត ទៅជា Order ជាក់ស្តែង (Checkout)
+export async function convertDesignToOrder(designId, customerId, orderDetails) {
+    const currentYear = new Date().getFullYear();
+    const counterRef = doc(db, "systemMetadata", "orderCounter");
+    const newOrderRef = doc(collection(db, "orders"));
+    const designRef = doc(db, "designs", designId);
+
+    try {
+        return await runTransaction(db, async (transaction) => {
+            // ទាញយកលេខរៀង Order
+            const counterDoc = await transaction.get(counterRef);
+            let currentCount = counterDoc.exists() && counterDoc.data().year === currentYear ? counterDoc.data().count : 0;
+            const nextCount = currentCount + 1;
+            const orderNumber = `PA-${currentYear}-${String(nextCount).padStart(5, '0')}`;
+
+            // ១. អាប់ដេតលេខរៀង
+            transaction.set(counterRef, { count: nextCount, year: currentYear }, { merge: true });
+            
+            // ២. បង្កើត Order ដែលមានបរិមាណជាក់ស្តែង
+            transaction.set(newOrderRef, {
+                orderNumber: orderNumber,
+                customerId: customerId,
+                designId: designId,
+                items: orderDetails.items, // ឧ. [{ name: "កាត", qty: 5 }, { name: "ត្រា", qty: 1 }]
+                totalPrice: orderDetails.totalPrice,
+                status: "Ready for Print", // រំលងវគ្គ Design ព្រោះធ្វើរួចហើយ
+                createdAt: serverTimestamp()
+            });
+
+            // ៣. ចាក់សោរ Design ភ្ជាប់ជាមួយ Order នេះ
+            transaction.update(designRef, {
+                status: "Approved",
+                linkedOrderId: newOrderRef.id
+            });
+
+            return orderNumber;
+        });
+    } catch (error) {
+        console.error("Conversion Error: ", error);
+        throw new Error("បរាជ័យក្នុងការបំប្លែង Design ទៅជា Order");
+    }
+}
+</file>
+
+<file path="services/orderService.js">
+import { db } from '../firebase-config.js';
+import { doc, collection, runTransaction, getDocs, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+// មុខងារបង្កើត Order ជាមួយប្រព័ន្ធការពារជាន់លេខ (Pessimistic Lock / Atomic Transaction)
+export async function createSecureOrder(customerId, productDetails) {
+    const currentYear = new Date().getFullYear();
+    const counterRef = doc(db, "systemMetadata", "orderCounter");
+    const newOrderRef = doc(collection(db, "orders"));
+
+    try {
+        return await runTransaction(db, async (transaction) => {
+            const counterDoc = await transaction.get(counterRef);
+            let currentCount = 0;
+
+            if (counterDoc.exists() && counterDoc.data().year === currentYear) {
+                currentCount = counterDoc.data().count;
+            } else if (counterDoc.exists() && counterDoc.data().year !== currentYear) {
+                // ទម្លាក់លេខរៀងទៅសូន្យវិញនៅពេលឆ្លងឆ្នាំថ្មី
+                currentCount = 0;
+            }
+
+            const nextCount = currentCount + 1;
+            const orderNumber = `PA-${currentYear}-${String(nextCount).padStart(5, '0')}`;
+
+            // Update លេខរៀង
+            transaction.set(counterRef, { count: nextCount, year: currentYear }, { merge: true });
+            
+            // បញ្ចូលទិន្នន័យ Order
+            transaction.set(newOrderRef, {
+                orderNumber: orderNumber,
+                customerId: customerId,
+                productDetails: productDetails,
+                status: "New",
+                createdAt: serverTimestamp()
+            });
+
+            return orderNumber;
+        });
+    } catch (error) {
+        console.error("Transaction Error: ", error);
+        throw new Error("បរាជ័យក្នុងការបង្កើតលេខ Order សុវត្ថិភាព");
+    }
+}
+
+// មុខងារទាញយកបញ្ជី Orders ទាំងអស់
+export async function getAllOrders() {
+    try {
+        const q = query(collection(db, "orders"), orderBy("createdAt", "desc"));
+        const querySnapshot = await getDocs(q);
+        const orders = [];
+        querySnapshot.forEach((doc) => {
+            orders.push({ id: doc.id, ...doc.data() });
+        });
+        return orders;
+    } catch (error) {
+        console.error("Fetch Orders Error: ", error);
+        throw error;
+    }
+}
+</file>
+
+<file path="services/quotationService.js">
+import { db } from '../firebase-config.js';
+import { doc, collection, runTransaction, getDocs, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+// មុខងារបង្កើត Quotation ជាមួយប្រព័ន្ធការពារជាន់លេខ (Pessimistic Lock / Atomic Transaction)
+export async function createSecureQuotation(customerId, productDetails, amount) {
+    const currentYear = new Date().getFullYear();
+    const counterRef = doc(db, "systemMetadata", "quotationCounter");
+    const newQuotationRef = doc(collection(db, "quotations"));
+
+    try {
+        return await runTransaction(db, async (transaction) => {
+            const counterDoc = await transaction.get(counterRef);
+            let currentCount = 0;
+
+            if (counterDoc.exists() && counterDoc.data().year === currentYear) {
+                currentCount = counterDoc.data().count;
+            } else if (counterDoc.exists() && counterDoc.data().year !== currentYear) {
+                // ទម្លាក់លេខរៀងទៅសូន្យវិញនៅពេលឆ្លងឆ្នាំថ្មី
+                currentCount = 0;
+            }
+
+            const nextCount = currentCount + 1;
+            const quotationNumber = `QT-${currentYear}-${String(nextCount).padStart(5, '0')}`;
+
+            // Update លេខរៀង
+            transaction.set(counterRef, { count: nextCount, year: currentYear }, { merge: true });
+            
+            // បញ្ចូលទិន្នន័យ Quotation
+            transaction.set(newQuotationRef, {
+                quotationNumber: quotationNumber,
+                customerId: customerId,
+                productDetails: productDetails,
+                amount: amount,
+                status: "Pending",
+                createdAt: serverTimestamp()
+            });
+
+            return quotationNumber;
+        });
+    } catch (error) {
+        console.error("Transaction Error: ", error);
+        throw new Error("បរាជ័យក្នុងការបង្កើតលេខ Quotation សុវត្ថិភាព");
+    }
+}
+
+// មុខងារទាញយកបញ្ជី Quotations ទាំងអស់
+export async function getAllQuotations() {
+    try {
+        const q = query(collection(db, "quotations"), orderBy("createdAt", "desc"));
+        const querySnapshot = await getDocs(q);
+        const quotations = [];
+        querySnapshot.forEach((doc) => {
+            quotations.push({ id: doc.id, ...doc.data() });
+        });
+        return quotations;
+    } catch (error) {
+        console.error("Fetch Quotations Error: ", error);
+        throw error;
+    }
+}
+</file>
+
+<file path="ui/customerUI.js">
+import { createCustomer, getAllCustomers } from '../services/customerService.js';
+
+export function renderCustomerModule(container) {
+    // គូរ UI ដោយប្រើ Tailwind
+    container.innerHTML = `
+        <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+            <h2 class="text-xl font-bold mb-4 border-b pb-2">បញ្ជីអតិថិជន (Customer CRM)</h2>
+            
+            <form id="customerForm" class="space-y-4 mb-8 bg-gray-50 p-4 rounded border">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-bold mb-1">ឈ្មោះអតិថិជន</label>
+                        <input type="text" id="custName" class="w-full border p-2 rounded focus:ring-2 focus:ring-blue-500 outline-none" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold mb-1">លេខទូរស័ព្ទ / តេឡេក្រាម</label>
+                        <input type="text" id="custPhone" class="w-full border p-2 rounded focus:ring-2 focus:ring-blue-500 outline-none" required>
+                    </div>
+                </div>
+                <button type="submit" id="btnSaveCustomer" class="bg-blue-600 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 transition w-full md:w-auto">
+                    រក្សាទុកអតិថិជនថ្មី
+                </button>
+                <p id="custFormStatus" class="text-sm font-bold mt-2"></p>
+            </form>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-gray-100 text-gray-700">
+                            <th class="p-3 border-b font-bold">លេខសម្គាល់ (ID)</th>
+                            <th class="p-3 border-b font-bold">ឈ្មោះ</th>
+                            <th class="p-3 border-b font-bold">ទំនាក់ទំនង</th>
+                        </tr>
+                    </thead>
+                    <tbody id="customerTableBody">
+                        <tr><td colspan="3" class="p-3 text-center text-gray-500 animate-pulse">កំពុងទាញយកទិន្នន័យអតិថិជន...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    `;
+
+    // ហៅមុខងារភ្ជាប់ Events និងទាញទិន្នន័យ
+    attachEventListeners();
+    loadAndDisplayCustomers();
+}
+
+function attachEventListeners() {
+    const form = document.getElementById('customerForm');
+    const statusText = document.getElementById('custFormStatus');
+    const btnSave = document.getElementById('btnSaveCustomer');
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        btnSave.disabled = true;
+        btnSave.classList.add('opacity-50', 'cursor-not-allowed');
+        statusText.className = "text-sm font-bold mt-2 text-blue-600";
+        statusText.innerText = "កំពុងរក្សាទុកទៅកាន់ Firestore...";
+
+        const data = {
+            name: document.getElementById('custName').value.trim(),
+            phone: document.getElementById('custPhone').value.trim()
+        };
+
+        try {
+            await createCustomer(data);
+            statusText.className = "text-sm font-bold mt-2 text-green-600";
+            statusText.innerText = "✅ រក្សាទុកបានជោគជ័យ!";
+            form.reset();
+            loadAndDisplayCustomers(); // ទាញយកទិន្នន័យមកបង្ហាញឡើងវិញភ្លាមៗ
+        } catch (error) {
+            statusText.className = "text-sm font-bold mt-2 text-red-600";
+            statusText.innerText = "❌ បរាជ័យ: " + error.message;
+        } finally {
+            btnSave.disabled = false;
+            btnSave.classList.remove('opacity-50', 'cursor-not-allowed');
+        }
+    });
+}
+
+async function loadAndDisplayCustomers() {
+    const tbody = document.getElementById('customerTableBody');
+    try {
+        const customers = await getAllCustomers();
+        
+        if (customers.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="3" class="p-3 text-center text-gray-500">មិនទាន់មានទិន្នន័យអតិថិជននៅឡើយទេ</td></tr>';
+            return;
+        }
+        
+        // Render ទិន្នន័យបញ្ចូលទៅក្នុង Table
+        tbody.innerHTML = customers.map(cust => `
+            <tr class="hover:bg-gray-50 border-b">
+                <td class="p-3 text-xs text-gray-400 font-mono">${cust.id}</td>
+                <td class="p-3 font-bold text-gray-800">${cust.name}</td>
+                <td class="p-3 text-gray-600">${cust.phone}</td>
+            </tr>
+        `).join('');
+    } catch (error) {
+        tbody.innerHTML = `<tr><td colspan="3" class="p-3 text-center text-red-500 font-bold">បរាជ័យក្នុងការទាញយកទិន្នន័យ: ${error.message}</td></tr>`;
+    }
+}
+</file>
+
+<file path="ui/designUI.js">
+import { createDesignJob } from '../services/designService.js';
+
+export function renderDesignModule(container) {
+    container.innerHTML = `
+        <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+            <h2 class="text-xl font-bold mb-4">បង្កើតការងាររចនាថ្មី</h2>
+            <form id="designForm" class="space-y-4">
+                <input type="text" id="custName" placeholder="ឈ្មោះអតិថិជន" class="w-full border p-2 rounded" required>
+                <textarea id="reqs" placeholder="តម្រូវការរចនា (ឧ. ត្រាឈ្មោះ, កាតនាមប័ណ្ណ...)" class="w-full border p-2 rounded"></textarea>
+                <input type="file" id="designFile" class="w-full border p-2 rounded">
+                <button type="submit" class="bg-pink-600 text-white p-2 rounded w-full font-bold">បង្កើតការងារ</button>
+            </form>
+            <div id="status" class="mt-4 font-bold"></div>
+        </div>
+    `;
+
+    document.getElementById('designForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const status = document.getElementById('status');
+        status.innerText = "កំពុងដំណើរការ...";
+        
+        try {
+            const cust = document.getElementById('custName').value;
+            const reqs = document.getElementById('reqs').value;
+            const file = document.getElementById('designFile').files[0];
+            
+            await createDesignJob(cust, reqs, file);
+            status.innerText = "ជោគជ័យ! ការងារត្រូវបានបង្កើត។";
+        } catch (err) {
+            status.innerText = "បរាជ័យ: " + err.message;
+        }
+    });
+}
+</file>
+
+<file path="ui/orderUI.js">
+import { createSecureOrder, getAllOrders } from '../services/orderService.js';
+import { getAllCustomers } from '../services/customerService.js';
+
+export async function renderOrderModule(container) {
+    // បង្ហាញ Loading សិន ខណៈពេលកំពុងទាញយកទិន្នន័យអតិថិជន
+    container.innerHTML = '<div class="text-center p-10"><div class="inline-block w-8 h-8 border-4 border-purple-500 border-t-transparent rounded-full animate-spin"></div><p class="mt-2 text-gray-500 font-bold">កំពុងរៀបចំប្រព័ន្ធបញ្ជាទិញ...</p></div>';
+
+    let customerOptions = '<option value="">-- សូមជ្រើសរើសអតិថិជន --</option>';
+    
+    try {
+        // CROSS-MODULE CALL: ទាញទិន្នន័យពី Customer Module
+        const customers = await getAllCustomers();
+        customers.forEach(c => {
+            customerOptions += `<option value="${c.id}">${c.name} (${c.phone})</option>`;
+        });
+    } catch (error) {
+        customerOptions = '<option value="">បរាជ័យក្នុងការទាញយកទិន្នន័យអតិថិជន</option>';
+    }
+
+    container.innerHTML = `
+        <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+            <h2 class="text-xl font-bold mb-4 border-b pb-2">គ្រប់គ្រងការបញ្ជាទិញ (Order Management)</h2>
+            
+            <form id="orderForm" class="space-y-4 mb-8 bg-purple-50 p-4 rounded border border-purple-100">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-bold mb-1">អតិថិជន <span class="text-red-500">*</span></label>
+                        <select id="orderCustomerId" class="w-full border p-2 rounded focus:ring-2 focus:ring-purple-500 outline-none" required>
+                            ${customerOptions}
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold mb-1">ព័ត៌មានលម្អិតផលិតផល <span class="text-red-500">*</span></label>
+                        <input type="text" id="orderProduct" placeholder="ឧ. Flash Stamp 30x50mm - ពណ៌ខៀវ" class="w-full border p-2 rounded focus:ring-2 focus:ring-purple-500 outline-none" required>
+                    </div>
+                </div>
+                <button type="submit" id="btnSaveOrder" class="bg-purple-600 text-white font-bold py-2 px-4 rounded hover:bg-purple-700 transition w-full md:w-auto">
+                    បង្កើត Order ថ្មី
+                </button>
+                <p id="orderFormStatus" class="text-sm font-bold mt-2"></p>
+            </form>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-gray-100 text-gray-700">
+                            <th class="p-3 border-b font-bold">លេខ Order</th>
+                            <th class="p-3 border-b font-bold">ស្ថានភាព</th>
+                            <th class="p-3 border-b font-bold">ផលិតផល</th>
+                        </tr>
+                    </thead>
+                    <tbody id="orderTableBody">
+                        <tr><td colspan="3" class="p-3 text-center text-gray-500 animate-pulse">កំពុងទាញយកទិន្នន័យ...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    `;
+
+    attachOrderEvents();
+    loadAndDisplayOrders();
+}
+
+function attachOrderEvents() {
+    const form = document.getElementById('orderForm');
+    const statusText = document.getElementById('orderFormStatus');
+    const btnSave = document.getElementById('btnSaveOrder');
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        btnSave.disabled = true;
+        btnSave.classList.add('opacity-50', 'cursor-not-allowed');
+        statusText.className = "text-sm font-bold mt-2 text-purple-600";
+        statusText.innerText = "កំពុងដំណើរការ Transaction...";
+
+        const customerId = document.getElementById('orderCustomerId').value;
+        const productDetails = document.getElementById('orderProduct').value.trim();
+
+        try {
+            const finalOrderNumber = await createSecureOrder(customerId, productDetails);
+            statusText.className = "text-sm font-bold mt-2 text-green-600";
+            statusText.innerText = `✅ ជោគជ័យ! លេខសម្គាល់: ${finalOrderNumber}`;
+            document.getElementById('orderProduct').value = ''; // Reset តែទម្រង់ទំនិញ
+            loadAndDisplayOrders(); // Update តារាង
+        } catch (error) {
+            statusText.className = "text-sm font-bold mt-2 text-red-600";
+            statusText.innerText = "❌ " + error.message;
+        } finally {
+            btnSave.disabled = false;
+            btnSave.classList.remove('opacity-50', 'cursor-not-allowed');
+        }
+    });
+}
+
+async function loadAndDisplayOrders() {
+    const tbody = document.getElementById('orderTableBody');
+    try {
+        const orders = await getAllOrders();
+        
+        if (orders.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="3" class="p-3 text-center text-gray-500">មិនទាន់មានការបញ្ជាទិញនៅឡើយទេ</td></tr>';
+            return;
+        }
+        
+        tbody.innerHTML = orders.map(ord => `
+            <tr class="hover:bg-gray-50 border-b">
+                <td class="p-3 font-bold text-purple-700">${ord.orderNumber}</td>
+                <td class="p-3"><span class="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs rounded-full font-bold">${ord.status}</span></td>
+                <td class="p-3 text-gray-600">${ord.productDetails}</td>
+            </tr>
+        `).join('');
+    } catch (error) {
+        tbody.innerHTML = `<tr><td colspan="3" class="p-3 text-center text-red-500 font-bold">បរាជ័យក្នុងការទាញយកទិន្នន័យ</td></tr>`;
+    }
+}
+</file>
+
+<file path="ui/quotationUI.js">
+import { createSecureQuotation, getAllQuotations } from '../services/quotationService.js';
+import { getAllCustomers } from '../services/customerService.js';
+
+export async function renderQuotationModule(container) {
+    // បង្ហាញ Loading សិន ខណៈពេលកំពុងទាញយកទិន្នន័យអតិថិជន
+    container.innerHTML = '<div class="text-center p-10"><div class="inline-block w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div><p class="mt-2 text-gray-500 font-bold">កំពុងរៀបចំប្រព័ន្ធ Quotation...</p></div>';
+
+    let customerOptions = '<option value="">-- សូមជ្រើសរើសអតិថិជន --</option>';
+    
+    try {
+        // CROSS-MODULE CALL: ទាញទិន្នន័យពី Customer Module
+        const customers = await getAllCustomers();
+        customers.forEach(c => {
+            customerOptions += `<option value="${c.id}">${c.name} (${c.phone})</option>`;
+        });
+    } catch (error) {
+        customerOptions = '<option value="">បរាជ័យក្នុងការទាញយកទិន្នន័យអតិថិជន</option>';
+    }
+
+    container.innerHTML = `
+        <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+            <h2 class="text-xl font-bold mb-4 border-b pb-2">គ្រប់គ្រងការចេញតម្លៃ (Quotation Management)</h2>
+            
+            <form id="quotationForm" class="space-y-4 mb-8 bg-blue-50 p-4 rounded border border-blue-100">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-sm font-bold mb-1">អតិថិជន <span class="text-red-500">*</span></label>
+                        <select id="quotationCustomerId" class="w-full border p-2 rounded focus:ring-2 focus:ring-blue-500 outline-none" required>
+                            ${customerOptions}
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold mb-1">ព័ត៌មានលម្អិតផលិតផល <span class="text-red-500">*</span></label>
+                        <input type="text" id="quotationProduct" placeholder="ឧ. បោះពុម្ពនាមប័ណ្ណ 10 ប្រអប់" class="w-full border p-2 rounded focus:ring-2 focus:ring-blue-500 outline-none" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold mb-1">តម្លៃសរុប ($) <span class="text-red-500">*</span></label>
+                        <input type="number" id="quotationAmount" placeholder="ឧ. 50.00" step="0.01" min="0" class="w-full border p-2 rounded focus:ring-2 focus:ring-blue-500 outline-none" required>
+                    </div>
+                </div>
+                <button type="submit" id="btnSaveQuotation" class="bg-blue-600 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 transition w-full md:w-auto">
+                    បង្កើត Quotation ថ្មី
+                </button>
+                <p id="quotationFormStatus" class="text-sm font-bold mt-2"></p>
+            </form>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-gray-100 text-gray-700">
+                            <th class="p-3 border-b font-bold">លេខ Quotation</th>
+                            <th class="p-3 border-b font-bold">ស្ថានភាព</th>
+                            <th class="p-3 border-b font-bold">ផលិតផល</th>
+                            <th class="p-3 border-b font-bold">តម្លៃសរុប</th>
+                        </tr>
+                    </thead>
+                    <tbody id="quotationTableBody">
+                        <tr><td colspan="4" class="p-3 text-center text-gray-500 animate-pulse">កំពុងទាញយកទិន្នន័យ...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    `;
+
+    attachQuotationEvents();
+    loadAndDisplayQuotations();
+}
+
+function attachQuotationEvents() {
+    const form = document.getElementById('quotationForm');
+    const statusText = document.getElementById('quotationFormStatus');
+    const btnSave = document.getElementById('btnSaveQuotation');
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        btnSave.disabled = true;
+        btnSave.classList.add('opacity-50', 'cursor-not-allowed');
+        statusText.className = "text-sm font-bold mt-2 text-blue-600";
+        statusText.innerText = "កំពុងដំណើរការ Transaction...";
+
+        const customerId = document.getElementById('quotationCustomerId').value;
+        const productDetails = document.getElementById('quotationProduct').value.trim();
+        const amount = parseFloat(document.getElementById('quotationAmount').value);
+
+        try {
+            const finalQuotationNumber = await createSecureQuotation(customerId, productDetails, amount);
+            statusText.className = "text-sm font-bold mt-2 text-green-600";
+            statusText.innerText = `✅ ជោគជ័យ! លេខសម្គាល់: ${finalQuotationNumber}`;
+            document.getElementById('quotationProduct').value = '';
+            document.getElementById('quotationAmount').value = '';
+            loadAndDisplayQuotations(); // Update តារាង
+        } catch (error) {
+            statusText.className = "text-sm font-bold mt-2 text-red-600";
+            statusText.innerText = "❌ " + error.message;
+        } finally {
+            btnSave.disabled = false;
+            btnSave.classList.remove('opacity-50', 'cursor-not-allowed');
+        }
+    });
+}
+
+async function loadAndDisplayQuotations() {
+    const tbody = document.getElementById('quotationTableBody');
+    try {
+        const quotations = await getAllQuotations();
+        
+        if (quotations.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="4" class="p-3 text-center text-gray-500">មិនទាន់មាន Quotation នៅឡើយទេ</td></tr>';
+            return;
+        }
+        
+        tbody.innerHTML = quotations.map(q => `
+            <tr class="hover:bg-gray-50 border-b">
+                <td class="p-3 font-bold text-blue-700">${q.quotationNumber}</td>
+                <td class="p-3"><span class="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs rounded-full font-bold">${q.status}</span></td>
+                <td class="p-3 text-gray-600">${q.productDetails}</td>
+                <td class="p-3 font-bold text-gray-700">$${q.amount.toFixed(2)}</td>
+            </tr>
+        `).join('');
+    } catch (error) {
+        tbody.innerHTML = `<tr><td colspan="4" class="p-3 text-center text-red-500 font-bold">បរាជ័យក្នុងការទាញយកទិន្នន័យ</td></tr>`;
+    }
+}
+</file>
+
+</files>
